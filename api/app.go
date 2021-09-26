@@ -7,7 +7,6 @@ import (
 	"github.com/alaref-codes/onlin-store/api/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/spf13/viper"
 )
 
 func setupRoutes(app *fiber.App) {
@@ -29,11 +28,16 @@ func setupRoutes(app *fiber.App) {
 }
 
 func main() {
-	viper.SetConfigFile(".env") // Reading the environment variable file
-	viper.ReadInConfig()
+
+	// Initilizing the fiber instance
 	app := fiber.New()
+
+	// setting up the routes of the api
 	setupRoutes(app)
+
+	// Initilizing the mysql database connection
 	database.InitDatabase()
+
 	app.Use(logger.New())
 	log.Fatal(app.Listen(":3000"))
 
