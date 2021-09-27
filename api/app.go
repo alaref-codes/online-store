@@ -18,10 +18,10 @@ func setupRoutes(app *fiber.App) {
 	app.Delete("/products/:id", routes.DeleteProducts)
 
 	// Order routes
-	app.Get("/Orders", routes.GetOrders)
-	app.Get("/Orders/:id", routes.GetOneOrder)
-	app.Post("/Orders", routes.PostOrder)
-	app.Delete("/Orders/:id", routes.DeleteOrder)
+	app.Get("/orders", routes.GetOrders)
+	app.Get("/orders/:id", routes.GetOneOrder)
+	app.Post("/orders", routes.PostOrder)
+	app.Delete("/orders/:id", routes.DeleteOrder)
 
 	// Restricted routes
 
@@ -39,6 +39,7 @@ func main() {
 	database.InitDatabase()
 
 	app.Use(logger.New())
+
 	log.Fatal(app.Listen(":3000"))
 
 }

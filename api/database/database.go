@@ -9,22 +9,28 @@ import (
 	"gorm.io/gorm"
 )
 
-type Product struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+type Order struct {
+	ID       uint      `gorm:"primaryKey"`
+	Products []Product `gorm:"many2many:order_products;"`
 }
+
+type Product struct {
+	ID       uint   `gorm:"primaryKey"`
+	Name     string `json:"name"`
+	Quantity int
+}
+
+// type OrderProduct struct {
+// 	OrderID   uint `gorm:"primaryKey"`
+// 	ProductID uint `gorm:"primaryKey"`
+// }
 
 var (
 	DBconn *gorm.DB
 )
 
-type Spec struct {
-	Password string
-}
-
 func InitDatabase() {
 	var err error
-
 	viper.SetConfigName("config") // Reading the environment variable file
 	viper.SetConfigType("env")
 	viper.AddConfigPath(".")
@@ -46,6 +52,6 @@ func InitDatabase() {
 		log.Fatal(err.Error())
 	}
 
-	DBconn.AutoMigrate(&Product{})
-	fmt.Println("Database connection set")
+	DBconn.AutoMigrate(&Order{})
+	fmt.Println("Database Connection Set")
 }
