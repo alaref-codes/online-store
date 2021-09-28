@@ -7,6 +7,7 @@ import (
 	"github.com/alaref-codes/onlin-store/api/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	jwtware "github.com/gofiber/jwt/v3"
 )
 
 func setupRoutes(app *fiber.App) {
@@ -17,6 +18,9 @@ func setupRoutes(app *fiber.App) {
 	app.Post("/products", routes.PostProducts)
 	app.Delete("/products/:id", routes.DeleteProducts)
 
+	app.Use(jwtware.New(jwtware.Config{
+		SigningKey: []byte("secret"),
+	}))
 	// Order routes
 	app.Get("/orders", routes.GetOrders)
 	app.Get("/orders/:id", routes.GetOneOrder)

@@ -61,11 +61,7 @@ func DeleteOrder(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DBconn
 	newid, _ := strconv.Atoi(id)
-	result := db.Select("Products")
-	if result.RowsAffected == 0 {
-		return fiber.NewError(503, "Record doesn't exists")
-	}
-	result.Delete(&database.Order{ID: uint(newid)})
+	db.Select("Products").Delete(&database.Order{ID: uint(newid)})
 
 	return c.SendString("Order Deleted successfully")
 }

@@ -9,6 +9,11 @@ import (
 	"gorm.io/gorm"
 )
 
+type User struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type Order struct {
 	ID       uint      `gorm:"primaryKey"`
 	Products []Product `gorm:"many2many:order_products;"`
@@ -41,12 +46,14 @@ func InitDatabase() {
 
 	dbName := "online_store"
 	dsn := "alaref:" + pass + "@tcp(127.0.0.1:3306)/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		// Logger: logger.Info,
+	})
 	DBconn = db
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	DBconn.AutoMigrate(&Order{})
+	DBconn.AutoMigrate(&Order{}, &User{})
 	fmt.Println("Database Connection Set")
 }
