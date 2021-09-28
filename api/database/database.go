@@ -20,11 +20,6 @@ type Product struct {
 	Quantity int
 }
 
-// type OrderProduct struct {
-// 	OrderID   uint `gorm:"primaryKey"`
-// 	ProductID uint `gorm:"primaryKey"`
-// }
-
 var (
 	DBconn *gorm.DB
 )

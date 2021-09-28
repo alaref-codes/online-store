@@ -11,7 +11,7 @@ import (
 func GetOrders(c *fiber.Ctx) error {
 	db := database.DBconn
 	var orders []database.Order
-	db.Find(&orders)
+	db.Preload("Products").Find(&orders)
 	return c.JSON(fiber.Map{
 		"Message": "All Orders routes",
 		"Orders":  orders,
@@ -27,7 +27,7 @@ func GetOneOrder(c *fiber.Ctx) error {
 }
 
 func PostOrder(c *fiber.Ctx) error {
-
+	db := database.DBconn
 	orderMap := make(map[string]int)
 
 	c.BodyParser(&orderMap)
@@ -44,17 +44,10 @@ func PostOrder(c *fiber.Ctx) error {
 		p.Quantity = qty
 
 		order.Products = append(order.Products, p)
+		fmt.Printf("id : %d \n quantity: %d", p.ID, p.Quantity)
 	}
 
-	db := database.DBconn
-	// var order database.Order
-	// err := c.BodyParser(&order)
-
-	// if err != nil {
-	// 	return fiber.NewError(401, "Something went wrong")
-	// }
-	fmt.Printf("%v", order)
-	if err := db.Save(&order).Error; err != nil {
+	if err := db.Create(&order).Error; err != nil {
 		return err
 	}
 
@@ -67,17 +60,12 @@ func PostOrder(c *fiber.Ctx) error {
 func DeleteOrder(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DBconn
-	var order database.Order
-
-	// db.Where("id = ?", id).Delete(&sub)  This one works too
-
-	result := db.First(&order, id)
-
+	newid, _ := strconv.Atoi(id)
+	result := db.Select("Products")
 	if result.RowsAffected == 0 {
 		return fiber.NewError(503, "Record doesn't exists")
 	}
-
-	result.Delete(&order)
+	result.Delete(&database.Order{ID: uint(newid)})
 
 	return c.SendString("Order Deleted successfully")
 }
