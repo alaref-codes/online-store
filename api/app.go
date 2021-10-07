@@ -19,7 +19,7 @@ func setupRoutes(app *fiber.App) {
 	app.Delete("/products/:id", routes.DeleteProducts)
 
 	app.Post("/users/signin", routes.Signin)
-	app.Post("/users", routes.CreateUser) // Sign up page
+	app.Post("/users/signup", routes.CreateUser) // Sign up page
 
 	app.Use(jwtware.New(jwtware.Config{
 		SigningKey: []byte("secret"),
