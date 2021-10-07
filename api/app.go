@@ -18,16 +18,21 @@ func setupRoutes(app *fiber.App) {
 	app.Post("/products", routes.PostProducts)
 	app.Delete("/products/:id", routes.DeleteProducts)
 
+	app.Post("/users/signin", routes.Signin)
+	app.Post("/users", routes.CreateUser) // Sign up page
+
 	app.Use(jwtware.New(jwtware.Config{
 		SigningKey: []byte("secret"),
 	}))
-	// Order routes
+	// Restricted routes
 	app.Get("/orders", routes.GetOrders)
 	app.Get("/orders/:id", routes.GetOneOrder)
 	app.Post("/orders", routes.PostOrder)
 	app.Delete("/orders/:id", routes.DeleteOrder)
 
-	// Restricted routes
+	app.Get("/users", routes.GetUsers)
+
+	app.Delete("/users/:email", routes.DeleteUser)
 
 }
 
